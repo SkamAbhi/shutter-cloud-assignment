@@ -75,11 +75,6 @@ const ProjectForm = ({ projectId, initialData }: ProjectFormProps) => {
     const isAmenitiesComplete = amenities.some((amenity) => amenity.selected);
     const isImageUploadComplete = images.length > 0;
     const isYouTubeComplete = youtubeUrls.some((url) => url.trim() !== "");
-    const isReraComplete =
-      isReraRegistered ||
-      reraNumbers.some((num) => num.trim() !== "") ||
-      (initialData?.isReraRegistered !== undefined &&
-        initialData.reraNumbers?.some((num: string) => num.trim() !== ""));
     const isLocationComplete =
       landmarks.some(
         (landmark) =>
