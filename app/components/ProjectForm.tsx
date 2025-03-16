@@ -16,53 +16,53 @@ const ProjectForm = ({ projectId, initialData }: ProjectFormProps) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [completionPercentage, setCompletionPercentage] = useState(75);
-  const [areAllAmenitiesSelected, setAreAllAmenitiesSelected] = useState(true);
+  const [areAllAmenitiesSelected, setAreAllAmenitiesSelected] = useState(false); 
   const [amenities, setAmenities] = useState<Amenity[]>(
     initialData?.amenities || [
-      { id: "1", name: "School in vicinity", selected: true },
-      { id: "2", name: "Near City Center", selected: true },
-      { id: "3", name: "Breakthrough Price", selected: true },
-      { id: "4", name: "High Rental Yield", selected: true },
-      { id: "5", name: "Well Ventilated", selected: true },
-      { id: "6", name: "Spacious", selected: true },
-      { id: "7", name: "Gated Society", selected: true },
-      { id: "8", name: "Luxury Lifestyle", selected: true },
-      { id: "9", name: "Newly Built", selected: true },
-      { id: "10", name: "Females Only", selected: true },
-      { id: "11", name: "Adjoining Metro Station", selected: true },
-      { id: "12", name: "Safe & Secure Locality", selected: true },
-      { id: "13", name: "Quick Deal", selected: true },
-      { id: "14", name: "Affordable", selected: true },
-      { id: "15", name: "Fully Renovated", selected: true },
-      { id: "16", name: "Ample Parking", selected: true },
-      { id: "17", name: "Tasteful Interior", selected: true },
-      { id: "18", name: "Well Maintained", selected: true },
-      { id: "19", name: "Family", selected: true },
-      { id: "20", name: "Peaceful vicinity", selected: true },
-      { id: "21", name: "Desperate Sale", selected: true },
-      { id: "22", name: "Investment Opportunity", selected: true },
-      { id: "23", name: "Reputed Builder", selected: true },
-      { id: "24", name: "Vastu Compliant", selected: true },
-      { id: "25", name: "Free Hold", selected: true },
-      { id: "26", name: "Prime Location", selected: true },
-      { id: "27", name: "Plenty of Sunlight", selected: true },
-      { id: "28", name: "Bachelors", selected: true },
+      { id: "1", name: "School in vicinity", selected: false },
+      { id: "2", name: "Near City Center", selected: false },
+      { id: "3", name: "Breakthrough Price", selected: false },
+      { id: "4", name: "High Rental Yield", selected: false },
+      { id: "5", name: "Well Ventilated", selected: false },
+      { id: "6", name: "Spacious", selected: false },
+      { id: "7", name: "Gated Society", selected: false },
+      { id: "8", name: "Luxury Lifestyle", selected: false },
+      { id: "9", name: "Newly Built", selected: false },
+      { id: "10", name: "Females Only", selected: false },
+      { id: "11", name: "Adjoining Metro Station", selected: false },
+      { id: "12", name: "Safe & Secure Locality", selected: false },
+      { id: "13", name: "Quick Deal", selected: false },
+      { id: "14", name: "Affordable", selected: false },
+      { id: "15", name: "Fully Renovated", selected: false },
+      { id: "16", name: "Ample Parking", selected: false },
+      { id: "17", name: "Tasteful Interior", selected: false },
+      { id: "18", name: "Well Maintained", selected: false },
+      { id: "19", name: "Family", selected: false },
+      { id: "20", name: "Peaceful vicinity", selected: false },
+      { id: "21", name: "Desperate Sale", selected: false },
+      { id: "22", name: "Investment Opportunity", selected: false },
+      { id: "23", name: "Reputed Builder", selected: false },
+      { id: "24", name: "Vastu Compliant", selected: false },
+      { id: "25", name: "Free Hold", selected: false },
+      { id: "26", name: "Prime Location", selected: false },
+      { id: "27", name: "Plenty of Sunlight", selected: false },
+      { id: "28", name: "Bachelors", selected: false },
     ]
   );
   const [images, setImages] = useState<ProjectImage[]>(
     initialData?.images || []
   );
   const [youtubeUrls, setYoutubeUrls] = useState<string[]>(
-    initialData?.youtubeUrls || [""]
+    initialData?.youtubeUrls || []
   );
   const [isReraRegistered, setIsReraRegistered] = useState<boolean>(
-    initialData?.isReraRegistered || true
+    initialData?.isReraRegistered || false
   );
   const [reraNumbers, setReraNumbers] = useState<string[]>(
-    initialData?.reraNumbers || [""]
+    initialData?.reraNumbers || []
   );
   const [landmarks, setLandmarks] = useState<Landmark[]>(
-    initialData?.landmarks || [{ name: "Park", distance: "", description: "" }]
+    initialData?.landmarks || [{ name: "", distance: "", description: "" }]
   );
   const [latitude, setLatitude] = useState<string>(initialData?.latitude || "");
   const [longitude, setLongitude] = useState<string>(
@@ -70,20 +70,43 @@ const ProjectForm = ({ projectId, initialData }: ProjectFormProps) => {
   );
 
   useEffect(() => {
-    let progress = 75;
-    if (amenities.some((amenity) => amenity.selected)) progress += 6;
-    if (images.length > 0 || youtubeUrls.some((url) => url.trim() !== ""))
-      progress += 10;
-    if (
+    let progress = 75; 
+    
+    const isAmenitiesComplete = amenities.some((amenity) => amenity.selected);
+    const isImageUploadComplete = images.length > 0;
+    const isYouTubeComplete = youtubeUrls.some((url) => url.trim() !== "");
+    const isReraComplete =
+      isReraRegistered ||
+      reraNumbers.some((num) => num.trim() !== "") ||
+      (initialData?.isReraRegistered !== undefined &&
+        initialData.reraNumbers?.some((num: string) => num.trim() !== ""));
+    const isLocationComplete =
       landmarks.some(
-        (landmark) => landmark.name || landmark.distance || landmark.description
+        (landmark) =>
+          landmark.name.trim() !== "" ||
+          landmark.distance.trim() !== "" ||
+          landmark.description.trim() !== ""
       ) ||
-      latitude ||
-      longitude
-    )
-      progress += 9;
+      latitude.trim() !== "" ||
+      longitude.trim() !== "";
+
+    progress += isAmenitiesComplete ? 5 : 0;
+    progress += isImageUploadComplete ? 5 : 0;
+    progress += isYouTubeComplete ? 5 : 0;
+    progress += isLocationComplete ? 10 : 0;
+
     setCompletionPercentage(Math.min(progress, 100));
-  }, [amenities, images, youtubeUrls, landmarks, latitude, longitude]);
+  }, [
+    amenities,
+    images,
+    youtubeUrls,
+    isReraRegistered,
+    reraNumbers,
+    landmarks,
+    latitude,
+    longitude,
+    initialData,
+  ]);
 
   const handleSubmit = async () => {
     try {
@@ -114,7 +137,7 @@ const ProjectForm = ({ projectId, initialData }: ProjectFormProps) => {
       className={cn(
         "p-6 max-h-[100vh] overflow-y-auto",
         "lg:ml-72",
-        "max-w-[900px] mx-auto  lg:pl-0"
+        "max-w-[900px] mx-auto lg:pl-0"
       )}
     >
       <h1 className="text-2xl font-bold">Update Project</h1>
