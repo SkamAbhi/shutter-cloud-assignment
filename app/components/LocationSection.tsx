@@ -40,7 +40,6 @@ const LocationSection = ({
   longitude,
   setLongitude,
 }: LocationSectionProps) => {
-  const [showMap, setShowMap] = useState(false);
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
   const [tempLatitude, setTempLatitude] = useState(latitude);
   const [tempLongitude, setTempLongitude] = useState(longitude);
@@ -201,30 +200,6 @@ const LocationSection = ({
               </Dialog>
             </div>
           </div>
-        </div>
-
-        <div className="mb-6">
-          {showMap && (
-            <div className="mt-4 h-64 w-full">
-              <MapContainer
-                center={[
-                  latitude ? parseFloat(latitude) : 51.505,
-                  longitude ? parseFloat(longitude) : -0.09,
-                ]}
-                zoom={13}
-                style={{ height: "100%", width: "100%" }}
-              >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                />
-                <LocationMarker
-                  setLatitude={setLatitude}
-                  setLongitude={setLongitude}
-                />
-              </MapContainer>
-            </div>
-          )}
         </div>
       </div>
       <Button

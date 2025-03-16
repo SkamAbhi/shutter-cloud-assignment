@@ -18,11 +18,17 @@ import {
   BarChart2,
   Calendar,
   MapPin,
-  Menu,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "../contexts/SidebarContext";
+
+interface NavItem {
+  href: string;
+  icon: React.ElementType;
+  label: string;
+  hasSubMenu?: boolean;
+}
 
 interface NavItemProps {
   href: string;
@@ -82,7 +88,7 @@ export default function Sidebar() {
   const pathname = usePathname();
   const { isOpen, toggleSidebar, closeSidebar } = useSidebar();
 
-  const navItems = [
+  const navItems: NavItem[] = [
     { href: "/dashboard", icon: BarChart, label: "Stats" },
     { href: "/dashboard/admin", icon: UserCircle, label: "Admin" },
     { href: "/dashboard/agent", icon: User, label: "Agent" },
@@ -111,31 +117,13 @@ export default function Sidebar() {
     { href: "/dashboard/booking", icon: Calendar, label: "Booking" },
   ];
 
-  const getActiveItem = () => {
-    let activeItem = null;
-    let longestMatch = 0;
-
-    navItems.forEach((item) => {
-      if (pathname.startsWith(item.href)) {
-        const matchLength = item.href.length;
-        if (matchLength > longestMatch) {
-          longestMatch = matchLength;
-          activeItem = item;
-        }
-      }
-    });
-
-    if (activeItem && activeItem.href === "/dashboard" && pathname !== "/dashboard") {
-      const subItem = navItems.find((item) => pathname.startsWith(item.href) && item.href !== "/dashboard");
-      if (subItem) {
-        activeItem = subItem;
-      }
+  const isItemActive = (itemHref: string): boolean => {
+    if (itemHref === "/dashboard") {
+      return pathname === "/dashboard";
     }
 
-    return activeItem;
+    return pathname.startsWith(itemHref);
   };
-
-  const activeItem = getActiveItem();
 
   return (
     <>
@@ -172,7 +160,7 @@ export default function Sidebar() {
                 href={item.href}
                 icon={item.icon}
                 label={item.label}
-                active={activeItem?.href === item.href}
+                active={isItemActive(item.href)}
                 hasSubMenu={item.hasSubMenu}
                 onClick={closeSidebar}
               />

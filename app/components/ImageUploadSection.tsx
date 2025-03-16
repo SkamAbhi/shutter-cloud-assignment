@@ -80,6 +80,7 @@ const ImageUploadSection = ({ images, setImages }: ImageUploadSectionProps) => {
               className="border rounded-lg overflow-hidden flex flex-col relative"
             >
               <div className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={image.url}
                   alt={`Uploaded ${index + 1}`}
